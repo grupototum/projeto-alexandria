@@ -12,19 +12,52 @@ import {
   X,
   Home,
   Search,
-  BarChart3
+  BarChart3,
+  Briefcase,
+  CheckSquare,
+  Rocket,
+  Building2,
+  Bot,
+  Users,
+  ChevronDown,
+  ChevronRight
 } from 'lucide-react';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 
 interface AlexandriaLayoutProps {
   children: React.ReactNode;
+}
+
+interface NavItem {
+  label: string;
+  href: string;
+  icon: React.ElementType;
+  description?: string;
+  children?: { label: string; href: string; icon: React.ElementType }[];
 }
 
 export default function AlexandriaLayout({ children }: AlexandriaLayoutProps) {
   const { user, logout } = useAuth();
   const [location, setLocation] = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
+    alexandria: true,
+    workspace: false,
+    settings: false,
+  });
 
-  const navigationItems = [
+  const toggleSection = (section: string) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
+
+  const navigationItems: NavItem[] = [
     {
       label: 'Home',
       href: '/',
@@ -32,39 +65,62 @@ export default function AlexandriaLayout({ children }: AlexandriaLayoutProps) {
       description: 'Dashboard principal'
     },
     {
-      label: 'Portal de POPs',
-      href: '/pops',
-      icon: FileText,
-      description: 'Procedimentos operacionais'
-    },
-    {
-      label: 'Context Hub',
-      href: '/context',
+      label: 'Alexandria',
+      href: '/alexandria',
       icon: BookOpen,
-      description: 'Gerenciador de contextos'
+      description: 'Central de conhecimento',
+      children: [
+        { label: 'Dashboard', href: '/alexandria', icon: BarChart3 },
+        { label: 'Portal POPs', href: '/alexandria/pops', icon: FileText },
+        { label: 'Context HUB', href: '/alexandria/context', icon: BookOpen },
+        { label: 'Central Skills', href: '/alexandria/skills', icon: Zap },
+        { label: 'OpenClaw', href: '/alexandria/openclaw', icon: BarChart3 },
+      ]
     },
     {
-      label: 'Central de Skills',
-      href: '/skills',
-      icon: Zap,
-      description: 'Catálogo de habilidades'
+      label: 'Workspace',
+      href: '/workspace/tasks',
+      icon: Briefcase,
+      description: 'Área de trabalho',
+      children: [
+        { label: 'Tarefas', href: '/workspace/tasks', icon: CheckSquare },
+        { label: 'Implantação', href: '/workspace/deployment', icon: Rocket },
+        { label: 'Clientes', href: '/workspace/clients', icon: Building2 },
+      ]
     },
     {
-      label: 'Dashboard OpenClaw',
-      href: '/openclaw',
-      icon: BarChart3,
-      description: 'Monitoramento de gateway'
-    }
+      label: 'Cráudio Codete',
+      href: '/craudio',
+      icon: Bot,
+      description: 'IA Local com Ollama'
+    },
+    {
+      label: 'Configurações',
+      href: '/settings/operators',
+      icon: Settings,
+      description: 'Operadores e sistema',
+      children: [
+        { label: 'Operadores', href: '/settings/operators', icon: Users },
+      ]
+    },
   ];
 
-  const isActive = (href: string) => location === href;
+  const isActive = (href: string) => {
+    if (href === '/') return location === href;
+    return location.startsWith(href);
+  };
+
+  const isSectionActive = (item: NavItem) => {
+    if (!item.children) return isActive(item.href);
+    return item.children.some(child => isActive(child.href));
+  };
 
   return (
     <div className="flex h-screen bg-background">
       {/* Sidebar */}
       <aside
         className={`${
-          sidebarOpen ? 'w-64' : 'w-20'
+          sidebarOpen ? 'w-72' : 'w-20'
         } bg-slate-900 text-white transition-all duration-300 flex flex-col border-r border-slate-800`}
       >
         {/* Header */}
@@ -89,25 +145,91 @@ export default function AlexandriaLayout({ children }: AlexandriaLayoutProps) {
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
           {navigationItems.map((item) => {
             const Icon = item.icon;
-            const active = isActive(item.href);
+            const hasChildren = item.children && item.children.length > 0;
+            const sectionKey = item.label.toLowerCase().replace(' ', '');
+            const isExpanded = expandedSections[sectionKey];
+            const sectionActive = isSectionActive(item);
+
+            if (!sidebarOpen) {
+              return (
+                <button
+                  key={item.href}
+                  onClick={() => setLocation(item.href)}
+                  className={`w-full flex items-center justify-center p-3 rounded-lg transition-colors ${
+                    sectionActive
+                      ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white'
+                      : 'text-slate-300 hover:bg-slate-800'
+                  }`}
+                  title={item.label}
+                >
+                  <Icon size={22} />
+                </button>
+              );
+            }
+
+            if (hasChildren) {
+              return (
+                <div key={item.label} className="space-y-1">
+                  <button
+                    onClick={() => toggleSection(sectionKey)}
+                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg transition-colors ${
+                      sectionActive
+                        ? 'bg-gradient-to-r from-purple-600/50 to-blue-600/50 text-white'
+                        : 'text-slate-300 hover:bg-slate-800'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <Icon size={20} />
+                      <span className="font-medium">{item.label}</span>
+                    </div>
+                    {isExpanded ? (
+                      <ChevronDown size={16} />
+                    ) : (
+                      <ChevronRight size={16} />
+                    )}
+                  </button>
+
+                  {isExpanded && (
+                    <div className="ml-4 space-y-1">
+                      {item.children?.map((child) => {
+                        const ChildIcon = child.icon;
+                        return (
+                          <button
+                            key={child.href}
+                            onClick={() => setLocation(child.href)}
+                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm ${
+                              isActive(child.href)
+                                ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white'
+                                : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'
+                            }`}
+                          >
+                            <ChildIcon size={16} />
+                            <span>{child.label}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+
             return (
               <button
                 key={item.href}
                 onClick={() => setLocation(item.href)}
                 className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
-                  active
+                  sectionActive
                     ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white'
                     : 'text-slate-300 hover:bg-slate-800'
                 }`}
                 title={item.label}
               >
-                <Icon size={20} className="flex-shrink-0" />
-                {sidebarOpen && (
-                  <div className="text-left">
-                    <div className="text-sm font-medium">{item.label}</div>
-                    <div className="text-xs text-slate-400">{item.description}</div>
-                  </div>
-                )}
+                <Icon size={20} />
+                <div className="text-left">
+                  <div className="text-sm font-medium">{item.label}</div>
+                  <div className="text-xs text-slate-400">{item.description}</div>
+                </div>
               </button>
             );
           })}
@@ -154,7 +276,7 @@ export default function AlexandriaLayout({ children }: AlexandriaLayoutProps) {
               />
             </div>
             <div className="flex items-center gap-2 text-sm text-slate-600">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
               Sistema Online
             </div>
           </div>

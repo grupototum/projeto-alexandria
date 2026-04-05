@@ -1,0 +1,29 @@
+{
+  "timestamp": "2026-04-05T20:22:12.942Z",
+  "options": {
+    "dirPath": "./docs/pops",
+    "dominio": "operacao",
+    "dryRun": false
+  },
+  "stats": {
+    "totalFiles": 2,
+    "processedFiles": 2,
+    "failedFiles": 0,
+    "totalChunks": 18,
+    "insertedChunks": 0,
+    "skippedChunks": 18,
+    "failedChunks": 0,
+    "errors": [],
+    "duration_seconds": 20.581
+  },
+  "files": [
+    {
+      "path": "docs/pops/POP-001-teste.md",
+      "docId": "POP-001"
+    },
+    {
+      "path": "docs/pops/POP-002-complexo.md",
+      "docId": "POP-002-COMPLEXO"
+    }
+  ]
+}

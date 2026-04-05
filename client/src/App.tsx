@@ -7,15 +7,55 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import AlexandriaLayout from "./components/AlexandriaLayout";
 
+// Alexandria Pages
+import AlexandriaDashboard from "./pages/alexandria/Dashboard";
+import PopsPortal from "./pages/alexandria/PopsPortal";
+import ContextHub from "./pages/alexandria/ContextHub";
+import SkillsCentral from "./pages/alexandria/SkillsCentral";
+import OpenClawDashboard from "./pages/alexandria/OpenClawDashboard";
+
+// Workspace Pages
+import Tasks from "./pages/workspace/Tasks";
+import Deployment from "./pages/workspace/Deployment";
+import Clients from "./pages/workspace/Clients";
+
+// Craudio IA Page
+import CraudioCodete from "./pages/craudio/CraudioCodete";
+
+// Settings Pages
+import OperatorsSettings from "./pages/settings/Operators";
+
 function Router() {
   return (
     <Switch>
-      <Route path={"/"} component={() => <AlexandriaLayout><Home /></AlexandriaLayout>} />
-      <Route path={"/pops"} component={() => <AlexandriaLayout><div className="p-8"><h1 className="text-3xl font-bold">Portal de POPs</h1><p className="text-slate-600 mt-2">Em desenvolvimento...</p></div></AlexandriaLayout>} />
-      <Route path={"/context"} component={() => <AlexandriaLayout><div className="p-8"><h1 className="text-3xl font-bold">Context Hub</h1><p className="text-slate-600 mt-2">Em desenvolvimento...</p></div></AlexandriaLayout>} />
-      <Route path={"/skills"} component={() => <AlexandriaLayout><div className="p-8"><h1 className="text-3xl font-bold">Central de Skills</h1><p className="text-slate-600 mt-2">Em desenvolvimento...</p></div></AlexandriaLayout>} />
-      <Route path={"/openclaw"} component={() => <AlexandriaLayout><div className="p-8"><h1 className="text-3xl font-bold">Dashboard OpenClaw</h1><p className="text-slate-600 mt-2">Em desenvolvimento...</p></div></AlexandriaLayout>} />
-      <Route path={"/404"} component={NotFound} />
+      {/* Legacy Route - Redirect to new structure */}
+      <Route path="/" component={() => <AlexandriaLayout><Home /></AlexandriaLayout>} />
+
+      {/* Alexandria Section */}
+      <Route path="/alexandria" component={() => <AlexandriaLayout><AlexandriaDashboard /></AlexandriaLayout>} />
+      <Route path="/alexandria/pops" component={() => <AlexandriaLayout><PopsPortal /></AlexandriaLayout>} />
+      <Route path="/alexandria/context" component={() => <AlexandriaLayout><ContextHub /></AlexandriaLayout>} />
+      <Route path="/alexandria/skills" component={() => <AlexandriaLayout><SkillsCentral /></AlexandriaLayout>} />
+      <Route path="/alexandria/openclaw" component={() => <AlexandriaLayout><OpenClawDashboard /></AlexandriaLayout>} />
+
+      {/* Legacy redirects */}
+      <Route path="/pops" component={() => <AlexandriaLayout><PopsPortal /></AlexandriaLayout>} />
+      <Route path="/context" component={() => <AlexandriaLayout><ContextHub /></AlexandriaLayout>} />
+      <Route path="/skills" component={() => <AlexandriaLayout><SkillsCentral /></AlexandriaLayout>} />
+      <Route path="/openclaw" component={() => <AlexandriaLayout><OpenClawDashboard /></AlexandriaLayout>} />
+
+      {/* Workspace Section */}
+      <Route path="/workspace/tasks" component={() => <AlexandriaLayout><Tasks /></AlexandriaLayout>} />
+      <Route path="/workspace/deployment" component={() => <AlexandriaLayout><Deployment /></AlexandriaLayout>} />
+      <Route path="/workspace/clients" component={() => <AlexandriaLayout><Clients /></AlexandriaLayout>} />
+
+      {/* Craudio IA */}
+      <Route path="/craudio" component={() => <AlexandriaLayout><CraudioCodete /></AlexandriaLayout>} />
+
+      {/* Settings */}
+      <Route path="/settings/operators" component={() => <AlexandriaLayout><OperatorsSettings /></AlexandriaLayout>} />
+
+      <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
     </Switch>

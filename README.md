@@ -55,7 +55,7 @@
 - **tRPC 11** para APIs type-safe
 - **Zod** para validação de schemas
 - **Supabase** (PostgreSQL) com extensão pgvector
-- **Google Gemini** para embeddings e transformações
+- **Google Gemini** para embeddings (768D via MRL) e transformações
 
 ### Banco de Dados
 - **Supabase (PostgreSQL)**
@@ -297,6 +297,25 @@ Para suporte, abra uma issue no repositório GitHub ou entre em contato através
 - [ ] Integração com ferramentas externas
 - [ ] API REST adicional
 - [ ] Documentação interativa
+
+## 🚀 Migração em Massa
+
+Para migrar todos os POPs de uma vez:
+
+```bash
+# Configurar credenciais
+export SUPABASE_URL="https://..."
+export SUPABASE_ANON_KEY="..."
+export GEMINI_API_KEY="..."
+
+# Teste (dry run)
+node migrate-pops.mjs --dir=./docs/pops --dry-run
+
+# Migração real
+node migrate-pops.mjs --dir=./docs/pops --dominio=operacao
+```
+
+Veja [MIGRATION.md](./MIGRATION.md) para detalhes completos.
 
 ---
 

@@ -1,0 +1,41 @@
+{
+  "timestamp": "2026-04-05T20:40:17.509Z",
+  "options": {
+    "dirPath": "./docs/pops",
+    "dominio": "operacao",
+    "dryRun": false
+  },
+  "stats": {
+    "totalFiles": 5,
+    "processedFiles": 5,
+    "failedFiles": 0,
+    "totalChunks": 60,
+    "insertedChunks": 42,
+    "skippedChunks": 18,
+    "failedChunks": 0,
+    "errors": [],
+    "duration_seconds": 70.507
+  },
+  "files": [
+    {
+      "path": "docs/pops/POP-001-teste.md",
+      "docId": "POP-001"
+    },
+    {
+      "path": "docs/pops/POP-002-complexo.md",
+      "docId": "POP-002-COMPLEXO"
+    },
+    {
+      "path": "docs/pops/POP-003-proposta-comercial.md",
+      "docId": "POP-003-PROPOSTA-COMERCIAL"
+    },
+    {
+      "path": "docs/pops/POP-004-onboarding-cliente.md",
+      "docId": "POP-004-ONBOARDING-CLIENTE"
+    },
+    {
+      "path": "docs/pops/POP-005-relatorio-semanal.md",
+      "docId": "POP-005-RELATORIO-SEMANAL"
+    }
+  ]
+}

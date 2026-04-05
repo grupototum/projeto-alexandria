@@ -16,7 +16,9 @@ const CONFIG = {
   MAX_CHUNK_SIZE: 1500,
   MIN_CHUNK_SIZE: 200,
   OVERLAP_SIZE: 300,
-  EMBEDDING_DIMENSION: 768
+  EMBEDDING_DIMENSION: 768,
+  GEMINI_MODEL: 'gemini-embedding-001',
+  GEMINI_OUTPUT_DIMENSION: 768  // MRL: pode ser 768, 1536 ou 3072
 };
 
 // ==========================================
@@ -299,10 +301,12 @@ class SupabaseService {
 class GeminiService {
   private genAI: GoogleGenerativeAI;
   private model: string;
+  private outputDimension: number;
 
-  constructor(apiKey: string, model: string = 'text-embedding-004') {
+  constructor(apiKey: string, model: string = CONFIG.GEMINI_MODEL, outputDimension: number = CONFIG.GEMINI_OUTPUT_DIMENSION) {
     this.genAI = new GoogleGenerativeAI(apiKey);
     this.model = model;
+    this.outputDimension = outputDimension;
   }
 
   async generateEmbeddings(texts: string[]): Promise<number[][]> {
@@ -312,7 +316,10 @@ class GeminiService {
     
     for (const text of texts) {
       const result = await model.embedContent(text);
-      embeddings.push(result.embedding.values);
+      const fullEmbedding = result.embedding.values;
+      // MRL: truncate to desired dimension (first N dimensions contain most information)
+      const embedding = fullEmbedding.slice(0, this.outputDimension);
+      embeddings.push(embedding);
     }
     
     return embeddings;
@@ -329,7 +336,7 @@ export class IngestionService {
 
   constructor(supabaseUrl: string, supabaseKey: string, geminiKey: string) {
     this.supabase = new SupabaseService(supabaseUrl, supabaseKey);
-    this.gemini = new GeminiService(geminiKey);
+    this.gemini = new GeminiService(geminiKey, CONFIG.GEMINI_MODEL, CONFIG.GEMINI_OUTPUT_DIMENSION);
   }
 
   async ingestDocument(filePath: string, options: { docId?: string; dominio?: string } = {}): Promise<IngestionResult> {

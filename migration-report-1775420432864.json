@@ -1,0 +1,40 @@
+{
+  "timestamp": "2026-04-05T20:20:32.861Z",
+  "options": {
+    "dirPath": "./docs/pops",
+    "dominio": "operacao",
+    "dryRun": false
+  },
+  "stats": {
+    "totalFiles": 2,
+    "processedFiles": 0,
+    "failedFiles": 2,
+    "totalChunks": 18,
+    "insertedChunks": 0,
+    "skippedChunks": 0,
+    "failedChunks": 0,
+    "errors": [
+      {
+        "file": "POP-001-teste.md",
+        "docId": "POP-001",
+        "error": "Dimensão incorreta. Atualize o schema do Supabase."
+      },
+      {
+        "file": "POP-002-complexo.md",
+        "docId": "POP-002-COMPLEXO",
+        "error": "Dimensão incorreta. Atualize o schema do Supabase."
+      }
+    ],
+    "duration_seconds": 17.079
+  },
+  "files": [
+    {
+      "path": "docs/pops/POP-001-teste.md",
+      "docId": "POP-001"
+    },
+    {
+      "path": "docs/pops/POP-002-complexo.md",
+      "docId": "POP-002-COMPLEXO"
+    }
+  ]
+}
